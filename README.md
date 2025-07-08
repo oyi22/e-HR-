@@ -15,5 +15,5 @@ Frontend aplikasi absensi karyawan berbasis React, dengan fitur autentikasi, das
 1. npm install
 
 
-##run 
+## run 
 1. npm run dev
