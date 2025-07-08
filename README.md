@@ -7,11 +7,11 @@ Frontend aplikasi absensi karyawan berbasis React, dengan fitur autentikasi, das
 **react-routerDom** = navigasi antar hal 
 
 
-##CLONE REPO : 
+## CLONE REPO : 
 1. git clone https://github.com/oyi22/e-HR-.git
 2. cd frontend
 
-##install dependency
+## install dependency
 1. npm install
 
 
