@@ -8,12 +8,12 @@ Frontend aplikasi absensi karyawan berbasis React, dengan fitur autentikasi, das
 
 
 #CLONE REPO : 
-##git clone https://github.com/oyi22/e-HR-.git
-##cd frontend
+git clone https://github.com/oyi22/e-HR-.git
+cd frontend
 
 #install dependency
-##npm install
+npm install
 
 
-#run 
+run 
 npm run dev
