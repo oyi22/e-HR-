@@ -25,55 +25,55 @@ const HariKerjaDetail = () => {
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState(null)
 
-  useEffect(() => {
-    if (!userId || isNaN(+userId)) {
-      setError('User ID tidak valid')
-      setLoading(false)
-      return
-    }
+    useEffect(() => {
+      if (!userId || isNaN(+userId)) {
+        setError('User ID tidak valid')
+        setLoading(false)
+        return
+      }
 
-const fetchData = async () => {
-  try {
-    setLoading(true)
+      const fetchDummyData = async () => {
+        setLoading(true)
+        await new Promise(resolve => setTimeout(resolve, 800)) // simulasi loading
 
-    const [userRes, absensiDetailRes, kalenderRes] = await Promise.all([
-      axios.get(`/api/hari-kerja/user/${userId}`),
-      axios.get(`/api/statistik/detail/${userId}`),
-      axios.get(`/api/hari-kerja/kalender/${userId}`)
-    ])
+        const dummyUser = {
+          waktu: '2024-06-01',
+          nama: 'Dita',
+          jabatan: 'Karyawan Produksi'
+        }
 
-    const userData = userRes.data
-    const absensiDetail = absensiDetailRes.data
-    const kalender = Array.isArray(kalenderRes.data)
-  ? kalenderRes.data
-  : Array.isArray(kalenderRes.data.data)
-    ? kalenderRes.data.data
-    : []
+        const dummyKalender = Array.from({ length: 31 }, (_, i) => {
+          const date = new Date(currentDate.getFullYear(), currentDate.getMonth(), i + 1)
+          const dateStr = date.toISOString().split('T')[0]
+          let status = 'Libur'
+          if (date.getDay() !== 0 && date.getDay() !== 6) {
+            if (i % 6 === 0) status = 'Izin'
+            else if (i % 8 === 0) status = 'Alpha'
+            else status = 'Hadir'
+          }
+          return {
+            tanggal: dateStr,
+            status,
+            shift: 'Pagi',
+            lokasi: 'Pabrik A',
+            keterangan: status === 'Alpha' ? 'Tanpa keterangan' : ''
+          }
+        })
 
-    setData({
-        user: {
-          waktu: userData?.waktu ?? '',
-          nama: userData?.nama ?? 'Nama',
-          jabatan: userData?.jabatan ?? 'Jabatan'
-        },
-        attendance: Array.isArray(absensiDetail) ? absensiDetail : [],
-        izin: Array.isArray(kalender) ? kalender.filter(d => d.status === 'Izin') : [],
-        kalender: Array.isArray(kalender) ? kalender : []
-  })
+        setData({
+          user: dummyUser,
+          attendance: dummyKalender,
+          izin: dummyKalender.filter(d => d.status === 'Izin'),
+          kalender: dummyKalender
+        })
 
+        setError(null)
+        setLoading(false)
+      }
 
-    setError(null)
-  } catch (err) {
-    console.error(err)
-    setError(err.response?.data?.message || 'Gagal memuat data dari server')
-  } finally {
-    setLoading(false)
-  }
-}
+      fetchDummyData()
+    }, [userId, currentDate])
 
-
-    fetchData()
-  }, [userId, currentDate])
 
 // eslint-disable-next-line no-unused-vars
 const getDateStatus = (day) => {

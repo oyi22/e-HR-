@@ -8,22 +8,41 @@ const DataAkun = () => {
   const [error, setError] = useState(null)
   const [searchTerm, setSearchTerm] = useState('')
 
-  const fetchUsers = async () => {
-    try {
-      setLoading(true)
-      const res = await fetch('http://localhost:3001/api/akun')
-      const data = await res.json()
-      if (!res.ok) throw new Error(data.message || 'Gagal mengambil data')
-      setUsers(data)
-      setError(null)
-    } catch (err) {
-      console.error('Error:', err)
-      setError(err.message || 'Terjadi kesalahan saat mengambil data')
-      setUsers([])
-    } finally {
-      setLoading(false)
-    }
-  }
+  // const fetchUsers = async () => {
+  //   try {
+  //     setLoading(true)
+  //     const res = await fetch('http://localhost:3001/api/akun')
+  //     const data = await res.json()
+  //     if (!res.ok) throw new Error(data.message || 'Gagal mengambil data')
+  //     setUsers(data)
+  //     setError(null)
+  //   } catch (err) {
+  //     console.error('Error:', err)
+  //     setError(err.message || 'Terjadi kesalahan saat mengambil data')
+  //     setUsers([])
+  //   } finally {
+  //     setLoading(false)
+  //   }
+  // }
+
+  const fetchUsers = () => {
+  setLoading(true)
+
+  setTimeout(() => {
+    const dummy = Array.from({ length: 25 }, (_, i) => ({
+      id: i + 1,
+      nama: `Karyawan ${i + 1}`,
+      email: `karyawan${i + 1}@example.com`,
+      jabatan: ['Staff', 'HRD', 'Manager', 'Admin', 'IT Support'][i % 5],
+      password: `pass${1000 + i}`,
+      foto: null // atau bisa pakai: `https://i.pravatar.cc/150?img=${i + 10}` biar ada foto dummy
+    }))
+    setUsers(dummy)
+    setError(null)
+    setLoading(false)
+  }, 1000)
+}
+
 
   useEffect(() => {
     fetchUsers()

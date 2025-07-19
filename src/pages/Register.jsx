@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom'
 import { register } from '../services/authService'
 import { User, Mail, Briefcase, Image, Check, UserPlus } from 'lucide-react'
 
+
 const Register = () => {
   const [form, setForm] = useState({ nama: '', jabatan: '', email: '', foto: '' })
   const [akun, setAkun] = useState(null)
@@ -11,20 +12,32 @@ const Register = () => {
 
   const handleChange = (e) => setForm({ ...form, [e.target.name]: e.target.value })
 
-  const handleRegister = async (e) => {
-    e.preventDefault()
-    if (!form.nama || !form.jabatan || !form.email) return alert('Mohon lengkapi semua field yang wajib diisi')
+  const handleRegister = (e) => {
+  e.preventDefault()
+  if (!form.nama || !form.jabatan || !form.email)
+    return alert('Mohon lengkapi semua field yang wajib diisi')
 
-    setIsLoading(true)
-    try {
-      const res = await register(form)
-      setAkun(res.data.akun)
-    } catch {
-      alert('Gagal mendaftar')
-    } finally {
-      setIsLoading(false)
+  setIsLoading(true)
+  setTimeout(() => {
+    const newUser = {
+      ...form,
+      email: form.email, 
+      password: 'user123', 
+      role: 'user'         
     }
-  }
+
+    const res = register(newUser)
+
+    if (res.success) {
+      setAkun(res.user)
+    } else {
+      alert(res.message)
+    }
+
+    setIsLoading(false)
+  }, 1000) 
+}
+
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50 flex items-center justify-center p-4">

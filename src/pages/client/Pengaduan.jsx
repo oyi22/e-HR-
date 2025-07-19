@@ -13,28 +13,26 @@ const Pengaduan = () => {
     if (stored) setUser(JSON.parse(stored))
   }, [])
 
-  const handleKirim = async () => {
-    if (!pesan.trim()) return alert("Pesan pengaduan tidak boleh kosong!")
-    if (!user.id) return alert("User ID tidak ditemukan!")
-    setIsSubmitting(true)
-    try {
-      const res = await fetch("http://localhost:3001/api/pengaduan", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ user_id: user.id, pesan })
-      })
-      if (res.ok) {
-        alert("Pengaduan berhasil dikirim!")
+    const handleKirim = async () => {
+      if (!pesan.trim()) return alert("Pesan pengaduan tidak boleh kosong!")
+      if (!user?.id && !user?.user_id) return alert("User ID tidak ditemukan!")
+
+      setIsSubmitting(true)
+
+      // Simulasi kirim dummy
+      setTimeout(() => {
+        console.log("DUMMY PENGADUAN TERKIRIM:", {
+          user_id: user.id || user.user_id,
+          nama: user.nama || user.name,
+          pesan: pesan.trim()
+        })
+        alert("Pengaduan berhasil dikirim! (dummy mode)")
         setPesan("")
         setCharCount(0)
-      } else throw new Error("Network response was not ok")
-    } catch (err) {
-      console.error(err)
-      alert("Gagal mengirim pengaduan.")
-    } finally {
-      setIsSubmitting(false)
+        setIsSubmitting(false)
+      }, 1500)
     }
-  }
+
 
   const handlePesanChange = e => {
     const val = e.target.value

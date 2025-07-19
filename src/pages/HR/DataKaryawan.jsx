@@ -10,22 +10,38 @@ const DataKaryawan = () => {
 
   useEffect(() => { fetchUsers(); }, []);
 
-  const fetchUsers = async () => {
-    try {
-      setLoading(true);
-      const res = await fetch('http://localhost:3001/api/akun');
-      const data = await res.json();
-      if (!res.ok) throw new Error(data.message || 'Gagal mengambil data');
-      setUsers(data);
-      setError(null);
-    } catch (err) {
-      console.error('Error:', err);
-      setError(err.message || 'Terjadi kesalahan saat mengambil data');
-      setUsers([]);
-    } finally {
-      setLoading(false);
-    }
-  };
+  // const fetchUsers = async () => {
+  //   try {
+  //     setLoading(true);
+  //     const res = await fetch('http://localhost:3001/api/akun');
+  //     const data = await res.json();
+  //     if (!res.ok) throw new Error(data.message || 'Gagal mengambil data');
+  //     setUsers(data);
+  //     setError(null);
+  //   } catch (err) {
+  //     console.error('Error:', err);
+  //     setError(err.message || 'Terjadi kesalahan saat mengambil data');
+  //     setUsers([]);
+  //   } finally {
+  //     setLoading(false);
+  //   }
+  // };
+
+  const fetchUsers = () => {
+  setLoading(true)
+
+  setTimeout(() => {
+    const dummy = Array.from({ length: 30 }, (_, i) => ({
+      id: i + 1,
+      nama: `Karyawan ${i + 1}`,
+      jabatan: ['Staff', 'Manager', 'Admin', 'HRD', 'IT Support'][Math.floor(Math.random() * 5)],
+    }))
+    setUsers(dummy)
+    setError(null)
+    setLoading(false)
+  }, 1000)
+}
+
 
   const filteredUsers = users.filter(({ nama = '', jabatan = '' }) => (
     nama.toLowerCase().includes(searchTerm.toLowerCase()) ||

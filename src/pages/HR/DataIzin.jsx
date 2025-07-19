@@ -9,22 +9,41 @@ const DataIzin = () => {
   const [searchTerm, setSearchTerm] = useState('')
   const [deleteLoading, setDeleteLoading] = useState(null)
 
-  const fetchIzinData = async () => {
-    try {
-      setLoading(true)
-      const res = await fetch('http://localhost:3001/api/izin')
-      const data = await res.json()
-      if (!res.ok) throw new Error(data.message || 'Gagal mengambil data izin')
-      setIzinData(data)
-      setError(null)
-    } catch (err) {
-      console.error(err)
-      setError(err.message || 'Terjadi kesalahan saat mengambil data')
-      setIzinData([])
-    } finally {
-      setLoading(false)
-    }
-  }
+  // const fetchIzinData = async () => {
+  //   try {
+  //     setLoading(true)
+  //     const res = await fetch('http://localhost:3001/api/izin')
+  //     const data = await res.json()
+  //     if (!res.ok) throw new Error(data.message || 'Gagal mengambil data izin')
+  //     setIzinData(data)
+  //     setError(null)
+  //   } catch (err) {
+  //     console.error(err)
+  //     setError(err.message || 'Terjadi kesalahan saat mengambil data')
+  //     setIzinData([])
+  //   } finally {
+  //     setLoading(false)
+  //   }
+  // }
+
+  const fetchIzinData = () => {
+  setLoading(true)
+
+  setTimeout(() => {
+    const dummy = Array.from({ length: 10 }, (_, i) => ({
+      id: i + 1,
+      nama_karyawan: `Karyawan ${i + 1}`,
+      jabatan: ['Staff', 'Manager', 'HRD', 'Admin'][i % 4],
+      shift: i % 2 === 0 ? 'Pagi' : 'Malam',
+      tanggal: new Date(Date.now() - i * 86400000), // tanggal mundur per hari
+      file: i % 3 === 0 ? `surat_izin_${i + 1}.pdf` : null
+    }))
+    setIzinData(dummy)
+    setError(null)
+    setLoading(false)
+  }, 1000)
+}
+
 
   const handleDelete = async (id) => {
     if (!window.confirm('Apakah Anda yakin ingin menghapus data izin ini?')) return
@@ -43,24 +62,29 @@ const DataIzin = () => {
     }
   }
 
-  const handleDownloadFile = async (filename) => {
-    try {
-      const res = await fetch(`http://localhost:3001/api/izin/file/${filename}`)
-      if (!res.ok) throw new Error('Gagal mendownload file')
-      const blob = await res.blob()
-      const url = window.URL.createObjectURL(blob)
-      const a = document.createElement('a')
-      a.href = url
-      a.download = filename
-      document.body.appendChild(a)
-      a.click()
-      window.URL.revokeObjectURL(url)
-      document.body.removeChild(a)
-    } catch (err) {
-      console.error(err)
-      alert('Gagal mendownload file')
-    }
-  }
+  // const handleDownloadFile = async (filename) => {
+  //   try {
+  //     const res = await fetch(`http://localhost:3001/api/izin/file/${filename}`)
+  //     if (!res.ok) throw new Error('Gagal mendownload file')
+  //     const blob = await res.blob()
+  //     const url = window.URL.createObjectURL(blob)
+  //     const a = document.createElement('a')
+  //     a.href = url
+  //     a.download = filename
+  //     document.body.appendChild(a)
+  //     a.click()
+  //     window.URL.revokeObjectURL(url)
+  //     document.body.removeChild(a)
+  //   } catch (err) {
+  //     console.error(err)
+  //     alert('Gagal mendownload file')
+  //   }
+  // }
+
+ const handleDownloadFile = (filename) => {
+  alert(`Simulasi download file: ${filename}`)
+}
+
 
   const formatDate = (date) =>
     new Date(date).toLocaleDateString('id-ID', {

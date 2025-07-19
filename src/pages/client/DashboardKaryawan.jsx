@@ -83,12 +83,18 @@ const DashboardKaryawan = () => {
           <div className="text-center">
             <div className="w-24 h-24 bg-gradient-to-r from-green-400 to-blue-500 rounded-full flex items-center justify-center mx-auto mb-6 shadow-lg">
               <span className="text-3xl font-bold text-white">
-                {user.nama.split(' ').map((n) => n[0]).join('').substring(0, 2)}
+                {(user?.nama ?? '')
+                  .split(' ')
+                  .map((n) => n[0])
+                  .join('')
+                  .substring(0, 2)}
+
               </span>
             </div>
             <h2 className="text-3xl font-bold text-indigo-900 mb-2">
-              {greeting}, {user.nama.split(' ')[0]}! 👋
+              {greeting}, {(user?.nama ?? '').split(' ')[0]}! 👋
             </h2>
+
             <p className="text-gray-600 text-lg">Semoga hari Anda produktif dan menyenangkan</p>
           </div>
         </div>
@@ -97,14 +103,14 @@ const DashboardKaryawan = () => {
           <UserInfoCard
             icon={User}
             title="Nama Lengkap"
-            value={user.nama}
+            value={'user (dita)'}
             gradient="from-blue-500 to-indigo-600"
             bgGradient="from-blue-50 to-indigo-50"
           />
           <UserInfoCard
             icon={Building}
             title="Jabatan"
-            value={user.jabatan}
+            value={'karyawan'}
             gradient="from-purple-500 to-pink-600"
             bgGradient="from-purple-50 to-pink-50"
           />

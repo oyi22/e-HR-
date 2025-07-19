@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { useParams } from 'react-router-dom'
-import axios from 'axios'
+//import axios from 'axios' = -> kalau mau dipake nanti di uncommend ajah
 import {
   BarChart, Bar, XAxis, YAxis, CartesianGrid,
   Tooltip, ResponsiveContainer, PieChart, Pie,
@@ -16,33 +16,48 @@ const JamKerjaDetail = () => {
   const [shiftData, setShiftData] = useState([])
   const [loading, setLoading] = useState(true)
 
-  useEffect(() => {
-    if (!userId) return
+    useEffect(() => {
+          if (!userId) return
 
-    const fetchData = async () => {
-      try {
-        const [hoursRes, shiftRes] = await Promise.all([
-          axios.get(`http://localhost:3001/api/jam-kerja/${userId}`),
-          axios.get(`http://localhost:3001/api/jam-kerja/shift/${userId}`)
-        ])
+          const fetchData = async () => {
+            try {
+              // DUMMY DATA / DATA FAKE
+              const dummyWorkHours = {
+                totalHours: 64,
+                weeklyData: [
+                  { day: 'Senin', hours: 8, date: '2025-07-14' },
+                  { day: 'Selasa', hours: 8, date: '2025-07-15' },
+                  { day: 'Rabu', hours: 8, date: '2025-07-16' },
+                  { day: 'Kamis', hours: 8, date: '2025-07-17' },
+                  { day: 'Jumat', hours: 8, date: '2025-07-18' },
+                  { day: 'Sabtu', hours: 12, date: '2025-07-19' },
+                  { day: 'Minggu', hours: 12, date: '2025-07-20' },
+                ]
+              }
 
-        setWorkHours(hoursRes.data)
+              const dummyShiftData = {
+                Pagi: 5,
+                Malam: 3
+              }
 
-        const formattedShiftData = [
-          { name: 'Shift Pagi', value: shiftRes.data.Pagi || 0 },
-          { name: 'Shift Malam', value: shiftRes.data.Malam || 0 }
-        ]
+              setWorkHours(dummyWorkHours)
 
-        setShiftData(formattedShiftData)
-        setLoading(false)
-      } catch (err) {
-        console.error('Gagal fetch jam kerja:', err)
-        setLoading(false)
-      }
-    }
+              const formattedShiftData = [
+                { name: 'Shift Pagi', value: dummyShiftData.Pagi },
+                { name: 'Shift Malam', value: dummyShiftData.Malam }
+              ]
 
-    fetchData()
-  }, [userId])
+              setShiftData(formattedShiftData)
+              setLoading(false)
+            } catch (err) {
+              console.error('Gagal fetch jam kerja:', err)
+              setLoading(false)
+            }
+          }
+
+      fetchData()
+    }, [userId])
+
 
   if (loading) return <div className="text-center mt-10">Loading data...</div>
 

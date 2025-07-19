@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react'
 import { useParams } from 'react-router-dom'
-import axios from 'axios'
 import { Star, StarHalf } from 'lucide-react'
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts'
 
@@ -10,18 +9,22 @@ const RatingDetail = () => {
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
-    const fetchRatingData = async () => {
-      try {
-        const res = await axios.get(`http://localhost:3001/api/ratings/${userId}`)
-        setRatingData(res.data)
-        setLoading(false)
-      } catch (err) {
-        console.error('Gagal fetch rating:', err)
-        setLoading(false)
-      }
+    const dummyData = {
+      currentRating: 4.2,
+      history: [
+        { month: 'Feb', rating: 3.8 },
+        { month: 'Mar', rating: 4.0 },
+        { month: 'Apr', rating: 4.3 },
+        { month: 'Mei', rating: 4.1 },
+        { month: 'Jun', rating: 4.5 },
+        { month: 'Jul', rating: 4.2 }
+      ]
     }
 
-    fetchRatingData()
+    setTimeout(() => {
+      setRatingData(dummyData)
+      setLoading(false)
+    }, 800) // simulasi delay load
   }, [userId])
 
   const renderStars = (rating) => {

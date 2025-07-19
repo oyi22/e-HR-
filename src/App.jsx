@@ -1,5 +1,9 @@
+import { useEffect } from 'react'
 import { Routes, Route, useLocation } from 'react-router-dom'
+import { ensureDummyUsers } from './services/authService'
+
 import Navbar from './components/Navbar'
+import Footer from './components/Footer'
 import Login from './pages/Login'
 import Register from './pages/Register'
 import Landing from './pages/Landing'
@@ -14,22 +18,25 @@ import DashboardKaryawan from './pages/client/DashboardKaryawan'
 import Absensi from './pages/client/Absensi'
 import Izin from './pages/client/Izin'
 import Pengaduan from './pages/client/Pengaduan'
-import Footer from './components/Footer'
 import HariKerjaDetail from './components/static/HariKerjaDetail'
 import JamKerjaDetail from './components/static/JamKerjaDetail'
+import RatingDetail from './components/static/RatingDetail'
 
 const App = () => {
   const location = useLocation()
-  
+
+
+  useEffect(() => {
+    ensureDummyUsers()
+  }, [])
+
   const noNavbarRoutes = [
     '/', '/login', '/register',
     '/dashboard-hrd', '/data-akun', '/data-izin',
     '/data-absensi', '/data-karyawan', '/data-pengaduan',
     '/data-spphk'
   ]
-
-  const noFooterRoutes = noNavbarRoutes 
-
+  const noFooterRoutes = noNavbarRoutes
   const hideNavbar = noNavbarRoutes.includes(location.pathname)
   const hideFooter = noFooterRoutes.includes(location.pathname)
 
@@ -42,6 +49,7 @@ const App = () => {
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
           <Route path="/dashboard-hrd" element={<DashboardHRD />} />
+          <Route path="/pengaduan" element={<Pengaduan />} />
           <Route path="/data-akun" element={<DataAkun />} />
           <Route path="/data-izin" element={<DataIzin />} />
           <Route path="/data-absensi" element={<DataAbsensi />} />
@@ -51,9 +59,10 @@ const App = () => {
           <Route path="/dashboard-karyawan" element={<DashboardKaryawan />} />
           <Route path="/absensi" element={<Absensi />} />
           <Route path="/izin" element={<Izin />} />
-          <Route path="/pengaduan" element={<Pengaduan />} />
+          <Route path="/data-pengaduan" element={<DataPengaduan/>} />
           <Route path="/hari-kerja/:userId" element={<HariKerjaDetail />} />
           <Route path="/jam-kerja/:userId" element={<JamKerjaDetail />} />
+          <Route path="/rating/:userId" element={<RatingDetail />} />
         </Routes>
       </div>
       {!hideFooter && <Footer />}

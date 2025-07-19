@@ -1,29 +1,36 @@
-import { useState } from 'react';
-import { useNavigate, Link } from 'react-router-dom';
-import { login } from '../services/authService';
-import { FaUser, FaLock } from 'react-icons/fa';
-import BahanImage from '../assets/bahan.jpg';
+import { useState, useEffect } from 'react'
+import { useNavigate, Link } from 'react-router-dom'
+import { ensureDummyUsers, login } from '../services/authService'
+import { FaUser, FaLock } from 'react-icons/fa'
+import BahanImage from '../assets/bahan.jpg'
 
 const Login = () => {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const navigate = useNavigate()
 
-  const handleLogin = async (e) => {
-    e.preventDefault()
-    try {
-      const res = await login(email, password)
-      const { user } = res.data
-      localStorage.setItem('user', JSON.stringify(user))
+  useEffect(()=>{
+    ensureDummyUsers()
+  },[])
 
-      const role = user.password.slice(0, 2)
-      if (role === 'HR') navigate('/dashboard-hrd')
-      else if (role.startsWith('K', 'OM')) navigate('/dashboard-karyawan')
-      else alert('Role tidak valid')
-    } catch {
-      alert('Login gagal')
-    }
+  const handleLogin = (e) => {
+    e.preventDefault()
+    const user = login(email, password)
+
+    console.log('login input : ', email, password)
+    console.log('kagak nemu: ', user)
+
+      if (user) {
+        localStorage.setItem('user', JSON.stringify(user))
+        if (user.role === 'admin') navigate('/dashboard-hrd')
+        else if (user.role === 'user') navigate('/dashboard-karyawan')
+        else alert('Role tidak valid')
+      } else {
+        alert('Login gagal! Cek email dan password.')
+      }
   }
+
+
 
   return (
     <div className="min-h-screen bg-[#081F5C] flex items-center justify-center p-4">
@@ -60,9 +67,12 @@ const Login = () => {
         {/* Right Side - Login Form */}
         <div className="lg:w-1/2 p-12 flex flex-col justify-center bg-[#E7F1FF]/5">
           <div className="mb-8">
-            <h2 className="text-3xl font-bold text-[#E7F1FF] mb-2">Masuk Akun</h2>
-            <p className="text-[#D0E3FF]">Silakan masukkan kredensial Anda</p>
-          </div>
+              <h2 className="text-3xl font-bold text-[#E7F1FF] mb-2">Masuk Akun</h2>
+                  <p className="text-[#D0E3FF] mb-4">Silakan masukkan kredensial Anda</p>
+                    <pre className="bg-[#334EAC]/10 text-[#D0E3FF] p-4 rounded-xl text-sm leading-relaxed overflow-auto whitespace-pre-wrap">
+              </pre>
+            </div>
+
 
           <form onSubmit={handleLogin} className="space-y-6">
             {/* Username Input */}
@@ -72,7 +82,7 @@ const Login = () => {
                 <FaUser className="text-[#7096D1] mr-4 text-lg" />
                 <input
                   type="text"
-                  placeholder="Username"
+                  placeholder="Email"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   className="outline-none flex-1 bg-transparent text-[#E7F1FF] placeholder-[#D0E3FF] text-lg"

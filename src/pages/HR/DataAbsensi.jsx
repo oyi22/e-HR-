@@ -10,21 +10,46 @@ const DataAbsensi = () => {
   const [currentPage, setCurrentPage] = useState(1)
   const [itemsPerPage] = useState(10)
 
-  const fetchAbsensi = async () => {
-    try {
-      setLoading(true)
-      const res = await fetch('http://localhost:3001/api/absensi')
-      const data = await res.json()
-      if (!res.ok) throw new Error(data.message || 'Gagal mengambil data absensi')
-      setAbsensi(data)
-      setError(null)
-    } catch (err) {
-      setError(err.message || 'Terjadi kesalahan saat mengambil data')
-      setAbsensi([])
-    } finally {
-      setLoading(false)
-    }
-  }
+  // const fetchAbsensi = async () => {
+  //   try {
+  //     setLoading(true)
+  //     const res = await fetch('http://localhost:3001/api/absensi')
+  //     const data = await res.json()
+  //     if (!res.ok) throw new Error(data.message || 'Gagal mengambil data absensi')
+  //     setAbsensi(data)
+  //     setError(null)
+  //   } catch (err) {
+  //     setError(err.message || 'Terjadi kesalahan saat mengambil data')
+  //     setAbsensi([])
+  //   } finally {
+  //     setLoading(false)
+  //   }
+  // }
+
+  const fetchAbsensi = () => {
+  setLoading(true)
+
+  setTimeout(() => {
+    const dummyData = Array.from({ length: 43 }, (_, i) => {
+      const tanggal = new Date()
+      tanggal.setDate(tanggal.getDate() - Math.floor(Math.random() * 7))
+      return {
+        id: i + 1,
+        nama: `Karyawan ${i + 1}`,
+        jabatan: ['Staff', 'Manager', 'HR', 'Admin'][Math.floor(Math.random() * 4)],
+        shift: Math.random() > 0.5 ? 'Pagi' : 'Malam',
+        lokasi: ['Jakarta', 'Bandung', 'Surabaya', 'Semarang'][Math.floor(Math.random() * 4)],
+        tanggal: tanggal.toISOString(),
+        keterangan: ['Hadir', 'Terlambat', 'Izin', 'Sakit'][Math.floor(Math.random() * 4)],
+      }
+    })
+
+    setAbsensi(dummyData)
+    setError(null)
+    setLoading(false)
+  }, 1000)
+}
+
 
   useEffect(() => {
     fetchAbsensi()

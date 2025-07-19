@@ -11,20 +11,30 @@ const Izin = () => {
   const [dragActive, setDragActive] = useState(false)
   const [submitted, setSubmitted] = useState(false)
 
-  useEffect(() => {
-    if (typeof Storage !== "undefined") {
-      const stored = localStorage.getItem("user")
-      if (stored) {
-        const userData = JSON.parse(stored)
-        console.log("User loaded from localStorage:", userData)
-        setUser(userData)
-      } else {
-        alert("Anda belum login! Silakan login terlebih dahulu.")
+    useEffect(() => {
+      console.log("Cek localStorage:", localStorage.getItem("user"))
+
+          const stored = localStorage.getItem("user")
+
+          if (stored) {
+            const userData = JSON.parse(stored)
+            console.log("User loaded from localStorage:", userData)
+            setUser(userData)
+        } else {
+        // fallback dummy user
+        const dummyUser = {
+          user_id: 999,
+          nama: "Dita Dummy",
+          password: "DUMMY999", // ini bisa dianggap no_induk
+          jabatan: "Karyawan Produksi",
+          foto: "", // bisa ditambah kalau butuh
+          email: "dummy@example.com"
+        }
+        console.warn("User tidak ditemukan di localStorage. Menggunakan dummy user:", dummyUser)
+        setUser(dummyUser)
       }
-    } else {
-      setUser({ user_id: 123, nama: "John Doe", password: "EMP001" })
-    }
-  }, [])
+    }, [])
+
 
   const handleDrag = (e) => {
     e.preventDefault()
@@ -55,56 +65,43 @@ const Izin = () => {
     if (selected) setFile(selected)
   }
 
-  const handleSubmit = async (e) => {
-    e.preventDefault()
+    const handleSubmit = async (e) => {
+      e.preventDefault()
 
-    const userId = user?.user_id || user?.id || user?.userId
-    if (!user || (!userId && userId !== 0)) {
-      alert("Data user tidak ada atau tidak valid. Coba login ulang.")
-      return
-    }
-
-    if (!file) {
-      alert("File surat izin wajib diupload.")
-      return
-    }
-
-    if (file.size > 2 * 1024 * 1024) {
-      alert("Ukuran file maksimal 2MB.")
-      return
-    }
-
-    setLoading(true)
-    try {
-      const formData = new FormData()
-      formData.append("user_id", userId.toString())
-      formData.append("shift", shift)
-      formData.append("file", file)
-
-      const res = await fetch("http://localhost:3001/api/izin/upload", {
-        method: "POST",
-        body: formData
-      })
-
-      if (!res.ok) {
-        const errorText = await res.text()
-        throw new Error(`Server error: ${res.status} - ${errorText}`)
+      const userId = user?.user_id || user?.id || user?.userId
+      if (!user || (!userId && userId !== 0)) {
+        alert("Data user tidak ada atau tidak valid. Coba login ulang.")
+        return
       }
 
-      await res.json()
-      alert("IZIN BERHASIL DIKIRIM!")
+      if (!file) {
+        alert("File surat izin wajib diupload.")
+        return
+      }
 
-      setSubmitted(true)
+      if (file.size > 2 * 1024 * 1024) {
+        alert("Ukuran file maksimal 2MB.")
+        return
+      }
+
+      // === DUMMY MODE: skip fetch ===
+      setLoading(true)
+
       setTimeout(() => {
-        setSubmitted(false)
+        console.log("DUMMY SUBMIT:", {
+          user_id: userId,
+          shift,
+          fileName: file.name,
+          fileSize: file.size,
+        })
+
+        alert("IZIN BERHASIL DIKIRIM! (dummy mode)")
+        setSubmitted(true)
         setFile(null)
-      }, 3000)
-    } catch (err) {
-      alert(`GAGAL MENGIRIM IZIN: ${err.message}`)
-    } finally {
-      setLoading(false)
+        setLoading(false)
+      }, 1500)
     }
-  }
+
 
   if (!user) {
     return (
